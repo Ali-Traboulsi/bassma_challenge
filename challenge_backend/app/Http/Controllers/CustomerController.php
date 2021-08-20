@@ -10,19 +10,22 @@ use Carbon\Carbon;
 
 class CustomerController extends Controller
 {
-    
+
     public function getCustomerByNumber(Request $request)
     {
 
         try {
 
-            $items = $request->get('items');
+//            $items = $request->get('items');
 
+            $items = $request->query("items");
             $customers = User::orderBy('name', 'asc')->paginate($items);
+            $countCustomers = User::count();
 
             return response()->json([
                 'error' => false,
-                'customers' => $customers
+                'customers' => $customers,
+                'customerNum' => $countCustomers
             ], 201);
         } catch (\Illuminate\Database\QueryException $exception) {
             $errorInfo = $exception->errorInfo;
@@ -31,8 +34,6 @@ class CustomerController extends Controller
                 'message' => "Internal error occured"
             ], 500);
         }
-
-
     }
 
 
@@ -70,21 +71,20 @@ class CustomerController extends Controller
             $minusYear = Carbon::now()->subYear();
 
 
+            switch ($request->query("duration")) {
 
-            switch ($request) {
-
-                case $minusDay:
+                case "d1":
 
                     $countUsers = User::where('created_at', '>=', $minusDay)->count();
                     $average = $countUsers / $minusDay->diffInHours();
                     return response()->json([
                         'error' => false,
                         'message' => 'The Customers has been retrieved successfully',
-                        'users' => 'average of' . round($average, 6) . ' users in the last 24 hours'
+                        'users' => 'average of ' . round($average, 6) . ' users in the last 24 hours'
                     ], 201);
                     break;
 
-                case $minusWeek:
+                case "w1":
 
                     $countUsers = User::where('created_at', '>=', $minusWeek)->count();
                     $average = $countUsers / $minusDay->diffInHours();
@@ -95,36 +95,36 @@ class CustomerController extends Controller
                     ], 201);
                     break;
 
-                case $minusMonth:
+                case "m1":
 
                     $countUsers = User::where('created_at', '>=', $minusMonth)->count();
                     $average = $countUsers / $minusDay->diffInHours();
                     return response()->json([
                         'error' => false,
                         'message' => 'The Customers has been retrieved successfully',
-                        'users' => 'average of ' . round($average, 6) . 'users since last month'
+                        'users' => 'average of ' . round($average, 6) . ' users since last month'
                     ], 201);
                     break;
 
-                case $minus3Months:
+                case "m3":
 
                     $countUsers = User::where('created_at', '>=', $minus3Months)->count();
                     $average = $countUsers / $minusDay->diffInHours();
                     return response()->json([
                         'error' => false,
                         'message' => 'The Customers has been retrieved successfully',
-                        'users' => 'average of ' . round($average, 6) . 'since the last 3 months'
+                        'users' => 'average of ' . round($average, 6) . ' since the last 3 months'
                     ], 201);
                     break;
 
-                case $minusYear:
+                case "y1":
 
                     $countUsers = User::where('created_at', '>=', $minusYear)->count();
                     $average = $countUsers / $minusDay->diffInHours();
                     return response()->json([
                         'error' => false,
                         'message' => 'The Customers has been retrieved successfully',
-                        'users' => 'average of ' . round($average, 6) . 'since last year'
+                        'users' => 'average of ' . round($average, 6) . ' since last year'
                     ], 201);
                     break;
             }

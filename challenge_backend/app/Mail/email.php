@@ -31,6 +31,7 @@ class email extends Mailable
     public function build()
     {
         return $this->subject('Admin - Total Registered Users Today!')
-            ->from('auto@admin.com');
+            ->from('ali@test.com')
+            ->view('testMail');
     }
 }

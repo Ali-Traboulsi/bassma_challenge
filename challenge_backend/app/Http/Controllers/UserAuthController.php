@@ -7,6 +7,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use phpDocumentor\Reflection\Types\False_;
 
 class UserAuthController extends Controller
 {
@@ -25,10 +26,15 @@ class UserAuthController extends Controller
 
         try {
 
+            // if a spammer tries to send data then we catch and return false
+            if ($request->get("name") || $request->get('email') || $request->get("password")) {
+                return false;
+            }
+
             $data = [
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => $request->password,
+                'name' => $request->nameadmin,
+                'email' => $request->emailadmin,
+                'password' => $request->passwordadmin,
             ];
 
             $user = new User();
@@ -43,7 +49,7 @@ class UserAuthController extends Controller
                 'message' => 'User Registered Successfully',
                 'data' => $user,
 //                'token' => $token
-            ]);
+            ], 201);
 
         }  catch(\Illuminate\Database\QueryException $exception) {
             $errorInfo = $exception->errorInfo;

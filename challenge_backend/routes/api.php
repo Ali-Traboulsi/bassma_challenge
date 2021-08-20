@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
-
+use App\Mail;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -28,10 +28,21 @@ Route::post('admin/logout','App\Http\Controllers\AdminController@logout');
 Route::post('user/register','App\Http\Controllers\UserAuthController@register');
 //Route::post('user/login','App\Http\Controllers\UserAuthController@login')->middleware('assign.guard:admins');
 Route::post('user/logout','App\Http\Controllers\UserAuthController@logout');
-Route::post('user/getAllUsers','App\Http\Controllers\CustomerController@getCustomerByNumber');
+Route::get('user/get-all-users','App\Http\Controllers\CustomerController@getCustomerByNumber');
 Route::get('user/searchBy','App\Http\Controllers\CustomerController@retrieve');
 Route::get('user/get-users-after-date','App\Http\Controllers\CustomerController@getUsersAfterDate');
 
+Route::get("send-mail", function () {
+    $details = [
+        "title" => "Mail from ali@test.com",
+        "body" => "This is for testing email using mailgun"
+    ];
+
+    \Illuminate\Support\Facades\Mail::to("ali-meng@outlook.com")->send(new App\Mail\email($details));
+
+    dd("Email is sent");
+
+});
 
 
 Route::group(['prefix' => 'admin', 'middleware' => ['assign.guard:admins','jwt.auth']],function ()

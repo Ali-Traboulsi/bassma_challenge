@@ -35,11 +35,20 @@ class AdminController extends Controller
 
         try {
 
+            $this->validate($request, [
+                'name' => 'required',
+                'email' => 'required',
+                'password' => 'required|min:6',
+                'g-recaptcha-response' => 'required|captcha'
+            ]);
+
             $data = [
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => $request->password,
             ];
+
+
 
             $admin = new Admin();
             $admin->fill($data);
@@ -71,8 +80,6 @@ class AdminController extends Controller
 
         try{
 
-//            dd(Auth::guard('admins')->check());
-//            dd(Auth::guard('admins')->user());
 
             if (Auth::guard('admins')->check()) {
                 return response()->json([

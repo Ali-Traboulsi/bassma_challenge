@@ -44,8 +44,8 @@ class EmailUsersRegistered extends Command
      */
     public function handle()
     {
-        $lastYear = Carbon::now()->subYear();
-        $registeredUsers = User::where('created_at', '>=', $lastYear)->count();
+        $lastDay = Carbon::now()->subDay();
+        $registeredUsers = User::where('created_at', '>=', $lastDay)->count();
 
         $admin = Admin::findOrFail(1);
 //        dd($admin = Auth::guard('admins')->check());
