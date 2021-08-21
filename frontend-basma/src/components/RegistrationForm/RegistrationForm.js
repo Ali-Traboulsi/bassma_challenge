@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import styles from './RegistrationForm.module.css';
 import {adminRegister} from "../../api/api";
 import {pattern} from "../../constants/constants";
@@ -6,8 +6,8 @@ import {API_BASE_URL} from "../../constants/apiConstants";
 import axios from "axios";
 import {useHistory} from "react-router";
 import Header from "../Header/Header";
-
-
+import ReCAPTCHA from "react-google-recaptcha";
+// import ReCAPTCHA from "react-recaptcha-v3";
 const RegistrationForm = props => {
 
 
@@ -25,6 +25,10 @@ const RegistrationForm = props => {
         }
     });
 
+
+    const handleRecaptchaChange = (value) => {
+        console.log(`Captcha value: ${value}`)
+    }
 
     const redirectToHome = () => {
         history.push('/admin/home');
@@ -92,11 +96,12 @@ const RegistrationForm = props => {
             <Header />
             <form action="">
                 <div className="form-group text-left mt-3">
-                    <label htmlFor="Input Name">Your Full Name</label>
+                    <label htmlFor="nameadmin">Your Full Name</label>
                     <input
                         type="text"
                         className="form-control"
-                        id="name"
+                        id="nameadmin"
+                        name="nameadmin"
                         placeholder="Enter your full name"
                         value={state.name}
                         onChange={handlechange}
@@ -104,32 +109,46 @@ const RegistrationForm = props => {
                     <div className={styles.errorMsg}>{state.errors.name}</div>
                 </div>
                 <div className="form-group text-left email mt-3">
-                        <label htmlFor="Input Email">Email address</label>
+                        <label htmlFor="emailadmin">Email address</label>
                         <input
                             type="email"
                             className="form-control"
-                            id="email"
+                            id="emailadmin"
                             aria-describedby="emailHelp"
                             placeholder="Enter Your Email"
-                            name={state.email}
+                            name="emailadmin"
+                            value={state.email}
                             onChange={handlechange}
                         />
                         <small id="emailHelp" className="form-text text-muted ">Your Email is at Safe </small>
                     <div className={styles.errorMsg}>{state.errors.email}</div>
                 </div>
                 <div className="form-group text-left mt-3">
-                    <label htmlFor="Input Passsword">Password</label>
+                    <label htmlFor="passwordadmin">Password</label>
                     <input
                         type="text"
                         className="form-control"
-                        id="password"
+                        id="passwordadmin"
                         placeholder="password"
-                        name={state.password}
+                        name="passwordadmin"
+                        value={state.password}
                         onChange={handlechange}
                     />
                     <div className={styles.errorMsg}>{state.errors.password}</div>
                 </div>
-
+                {/* H O N E Y P O T For Catching spammmers*/}
+                <label className={styles.ohnohoney} htmlFor="name">
+                    <input type="text" className={styles.ohnohoney} autoComplete="off" id="name" name="name" placeholder="Your Name Here"/>
+                </label>
+                <label className={styles.ohnohoney} htmlFor="email">
+                    <input type="text" className={styles.ohnohoney} autoComplete="off" id="email" name="email" placeholder="Your Email Here"/>
+                </label>
+                <div>
+                    <ReCAPTCHA
+                        sitekey="6LcsDhQcAAAAAH3vTMSSoFUpdrdfkF6wMEbmLiQ9"
+                        onChange={handleRecaptchaChange}
+                    />
+                </div>
                 <button
                     type="submit"
                     className="btn btn-primary mb-3"

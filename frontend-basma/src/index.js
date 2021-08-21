@@ -4,12 +4,16 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Routes from "./routes/Routes";
+import enTranslations from '@shopify/polaris/locales/en.json';
+import {AppProvider, Page, Card, Button} from '@shopify/polaris';
 
 ReactDOM.render(
-  <React.StrictMode>
-      <Routes />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <AppProvider i18n={enTranslations}>
+        <Page>
+            <Routes/>
+        </Page>
+    </AppProvider>,
+      document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function
